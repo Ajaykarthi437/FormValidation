@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Registration Form</title>
+
+<style>
+    body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        background: burlywood;
+        padding: 20px;
+    }
+
+    .container {
+        width: 380px;
+        background: white;
+        padding: 20px;
+        margin: auto;
+        margin-top: 100px;
+        border-radius: 10px;
+        box-shadow: 0 0 12px rgba(0,0,0,0.2);
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    input {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+        transition: 0.3s;
+    }
+
+    input.valid {
+        border-color: green;
+    }
+
+    input.invalid {
+        border-color: red;
+    }
+
+    .error {
+        color: red;
+        font-size: 13px;
+        margin-bottom: 8px;
+    }
+
+    .password-wrapper {
+        position: relative;
+    }
+
+    .togglePassword {
+        position: absolute;
+        right: 10px;
+        top: 12px;
+        cursor: pointer;
+        user-select: none;
+        font-size: 14px;
+        color: black;
+    }
+
+    button {
+        width: 100%;
+        padding: 12px;
+        background: #0d6efd;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        margin-top: 15px;
+        cursor: pointer;
+        font-size: 16px;
+        opacity: 0.7;
+    }
+
+    button:enabled {
+        opacity: 1;
+        cursor: pointer;
+    }
+
+    .success {
+        color: green;
+        text-align: center;
+        margin-top: 15px;
+        font-size: 16px;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Registration Form</h2>
+
+    <!-- Name Field -->
+    <label>Name</label>
+    <input type="text" id="name" oninput="validateForm()">
+    <div id="nameError" class="error"></div>
+
+    <!-- Email Field -->
+    <label>Email</label>
+    <input type="text" id="email" oninput="validateForm()">
+    <div id="emailError" class="error"></div>
+
+    <!-- Password Field -->
+    <label>Password</label>
+    <div class="password-wrapper">
+        <input type="password" id="password" oninput="validateForm()">
+        <span class="togglePassword" onclick="togglePassword()">Show</span>
+    </div>
+    <div id="passwordError" class="error"></div>
+
+    <!-- Submit Button -->
+    <button id="submitBtn" disabled>Submit</button>
+
+    <!-- Success Message -->
+    <div id="successMsg" class="success"></div>
+</div>
+
+<script>
+
+const nameInput = document.getElementById("name");
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+const submitBtn = document.getElementById("submitBtn");
+const successMsg = document.getElementById("successMsg");
+
+// Show/Hide password toggle
+function togglePassword() {
+    let icon = document.querySelector(".togglePassword");
+
+    if (passwordInput.type == "password") {
+        passwordInput.type = "text";
+        icon.innerHTML = "Hide";
+    } else {
+        passwordInput.type = "password";
+        icon.innerHTML = "Show";
+    }
+}
+
+submitBtn.addEventListener("click", function(event) {
+    event.preventDefault();
+
+    // Success message
+    successMsg.textContent = "Form Submitted Successfully!";
+
+    // Reset fields
+    nameInput.value = "";
+    emailInput.value = "";
+    passwordInput.value = "";
+
+    // Remove styling
+    nameInput.classList.remove("valid", "invalid");
+    emailInput.classList.remove("valid", "invalid");
+    passwordInput.classList.remove("valid", "invalid");
+
+    // Clear errors
+    document.getElementById("nameError").textContent = "";
+    document.getElementById("emailError").textContent = "";
+    document.getElementById("passwordError").textContent = "";
+
+    // Disable submit button again
+    submitBtn.disabled = true;
+});
+
+function validateForm() {
+    let name = nameInput.value.trim();
+    let email = emailInput.value.trim();
+    let password = passwordInput.value.trim();
+
+    let valid = true;
+
+    // Name Validation
+    if (name === "") {
+        document.getElementById("nameError").textContent = "Name cannot be empty";
+        nameInput.classList.add("invalid");
+        nameInput.classList.remove("valid");
+        valid = false;
+    } else {
+        document.getElementById("nameError").textContent = "";
+        nameInput.classList.add("valid");
+        nameInput.classList.remove("invalid");
+    }
+
+    // Email Validation
+    let emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailPattern.test(email)) {
+        document.getElementById("emailError").textContent = "Enter a valid email";
+        emailInput.classList.add("invalid");
+        emailInput.classList.remove("valid");
+        valid = false;
+    } else {
+        document.getElementById("emailError").textContent = "";
+        emailInput.classList.add("valid");
+        emailInput.classList.remove("invalid");
+    }
+
+    // Password Validation
+    if (password.length < 6) {
+        document.getElementById("passwordError").textContent = "Minimum 6 characters required";
+        passwordInput.classList.add("invalid");
+        passwordInput.classList.remove("valid");
+        valid = false;
+    } else {
+        document.getElementById("passwordError").textContent = "";
+        passwordInput.classList.add("valid");
+        passwordInput.classList.remove("invalid");
+    }
+
+    // Enable or Disable Submit Button
+    submitBtn.disabled = !valid;
+
+    // Remove success message when typing
+    successMsg.textContent = "";
+}
+
+</script>
+
+</body>
+</html>
